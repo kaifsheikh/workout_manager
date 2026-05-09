@@ -1,28 +1,41 @@
 [
   {
     "id": 1,
-    "images": ["image.png"],
+    "images": ["images/chest/flat.png","images/chest/chest.png"],
     "muscle": "Chest",
     "category": "Middle Chest",
-    "exerciseName": "Flat Bench Press",
+    "exerciseName": "Flat Bench Barbell Press",
     "alternative_id": [],
     "targetMuscle": "Middle Chest",
     "type": "Strength",
     "sets": 4,
-    "reps": "8-12",
+    "reps": "8",
     "restTime": "90 sec"
   },
   {
     "id": 2,
-    "images": ["image3.png"],
+    "images": ["images/arms/biceps.png"],
     "muscle": "Biceps",
-    "category": "Long Head",
-    "exerciseName": "Barbell Curl",
+    "category": "Short Head",
+    "exerciseName": "Dumbbell Bicep Curls",
     "alternative_id": [],
-    "targetMuscle": "Biceps",
+    "targetMuscle": "Short Head",
     "type": "Hypertrophy",
     "sets": 4,
-    "reps": "8-12",
-    "restTime": "90 sec"
+    "reps": "12",
+    "restTime": "80 sec"
+  },
+  {
+    "id": 3,
+    "images": ["images/arms/triceps.png" , "images/arms/triceps_2.png"],
+    "muscle": "Triceps",
+    "category": "Long Head",
+    "exerciseName": "Overhead Dumbbell Extension",
+    "alternative_id": [],
+    "targetMuscle": "Long Head",
+    "type": "Hypertrophy",
+    "sets": 4,
+    "reps": "12",
+    "restTime": "80 sec"
   }
 ]
