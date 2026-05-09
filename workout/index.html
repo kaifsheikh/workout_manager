@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏋️ Gym Exercise Library | Smart Workout Guide</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <div class="logo-icon">💪</div>
+                Gym<span style="color:var(--accent)">Exercise</span>Lib
+            </div>
+            <div class="header-stats">
+                <div class="stat-pill">📦 Total: <span id="totalCount">0</span> exercises</div>
+                <div class="stat-pill">🔍 Showing: <span id="filteredCount">0</span></div>
+                <div class="filter-active-indicator" id="filterIndicator">⚡ Filters active</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar" id="filterBar">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search exercises by name, muscle, category, type...">
+        </div>
+        <div class="dropdown-wrapper" id="muscleDropdownWrapper">
+            <button class="dropdown-btn" id="muscleDropdownBtn" onclick="toggleDropdown('muscle')">
+                <span class="btn-icon">🎯</span> Muscle <span class="arrow">▾</span>
+            </button>
+            <div class="dropdown-menu" id="muscleDropdownMenu"></div>
+        </div>
+        <div class="dropdown-wrapper" id="categoryDropdownWrapper">
+            <button class="dropdown-btn" id="categoryDropdownBtn" onclick="toggleDropdown('category')">
+                <span class="btn-icon">📂</span> Category <span class="arrow">▾</span>
+            </button>
+            <div class="dropdown-menu" id="categoryDropdownMenu"></div>
+        </div>
+        <div class="dropdown-wrapper" id="typeDropdownWrapper">
+            <button class="dropdown-btn" id="typeDropdownBtn" onclick="toggleDropdown('type')">
+                <span class="btn-icon">🏷️</span> Type <span class="arrow">▾</span>
+            </button>
+            <div class="dropdown-menu" id="typeDropdownMenu"></div>
+        </div>
+        <button class="clear-filters" onclick="clearAllFilters()">✕ Clear All Filters</button>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-container">
+        <div class="results-header">
+            <div class="results-title" id="resultsTitle">Showing <strong>all exercises</strong></div>
+        </div>
+        <div class="cards-grid" id="cardsGrid"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

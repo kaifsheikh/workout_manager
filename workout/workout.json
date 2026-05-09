@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "images": ["image.png"],
+    "muscle": "Chest",
+    "category": "Middle Chest",
+    "exerciseName": "Flat Bench Press",
+    "alternative_id": [],
+    "targetMuscle": "Middle Chest",
+    "type": "Strength",
+    "sets": 4,
+    "reps": "8-12",
+    "restTime": "90 sec"
+  },
+  {
+    "id": 2,
+    "images": ["image3.png"],
+    "muscle": "Biceps",
+    "category": "Long Head",
+    "exerciseName": "Barbell Curl",
+    "alternative_id": [],
+    "targetMuscle": "Biceps",
+    "type": "Hypertrophy",
+    "sets": 4,
+    "reps": "8-12",
+    "restTime": "90 sec"
+  }
+]
