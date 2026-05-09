@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Gym Workout Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Advanced Gym Workout Tracker</h1>
+            <p>Track, Analyze, and Improve Your Fitness Journey</p>
+        </header>
+
+        <section class="section-card">
+            <h2 class="section-title">
+                <span class="icon">📊</span>
+                Performance Dashboard
+            </h2>
+            <div class="stats-grid" id="statsGrid"></div>
+        </section>
+
+        <section class="section-card">
+            <h2 class="section-title">
+                <span class="icon">🔍</span>
+                Filter & Manage Data
+            </h2>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label>Filter by Date</label>
+                    <input type="date" id="dateFilter">
+                </div>
+                <div class="filter-group">
+                    <label>Filter by Muscle</label>
+                    <select id="muscleFilter">
+                        <option value="">All Muscles</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Filter by Month</label>
+                    <input type="month" id="monthFilter">
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button id="clearFilterBtn" class="btn btn-secondary">Clear Filters</button>
+                <button id="deleteMonthBtn" class="btn btn-danger">Delete Month Data</button>
+                <button id="downloadMonthBtn" class="btn btn-success">Download Month (PDF)</button>
+            </div>
+        </section>
+
+        <!-- Backup Section-->
+        <section class="section-card">
+            <h2 class="section-title">
+                <span class="icon">💾</span>
+                Backup & Restore Data
+            </h2>
+            <div class="filter-actions">
+                <button id="exportDataBtn" class="btn btn-success">📥 Export All Data (JSON)</button>
+                <button id="importDataBtn" class="btn btn-primary">📤 Import Data</button>
+                <button id="backupToDeviceBtn" class="btn btn-secondary">💾 Backup to Device</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+            </div>
+
+            <div id="backupInfo"
+                style="margin-top: 20px; padding: 15px; background: var(--bg-secondary); border-radius: 12px;">
+                <h4 style="margin-bottom: 10px;">📋 Backup Information</h4>
+                <div id="backupDetails"></div>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h2 class="section-title">
+                <span class="icon">⚙️</span>
+                Column Management
+            </h2>
+            <div class="column-management">
+                <div class="column-box">
+                    <h4>Add New Column</h4>
+                    <div class="column-form-inline">
+                        <input type="text" id="newColumnName" placeholder="Column Name">
+                        <select id="newColumnType">
+                            <option value="text">Text</option>
+                            <option value="number">Number</option>
+                            <option value="boolean">Yes/No</option>
+                            <option value="date">Date</option>
+                        </select>
+                        <button id="addColumnBtn" class="btn btn-primary">Add</button>
+                    </div>
+                </div>
+                <div class="column-box">
+                    <h4>Delete Column</h4>
+                    <div class="column-form-inline">
+                        <select id="deleteColumnSelect">
+                            <option value="">Select Column</option>
+                        </select>
+                        <button id="deleteColumnBtn" class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h2 class="section-title">
+                <span class="icon">💪</span>
+                Add New Workout
+            </h2>
+            <div id="dynamicForm" class="dynamic-form"></div>
+            <button id="addWorkoutBtn" class="btn btn-primary">Save Workout</button>
+        </section>
+
+        <section class="section-card">
+            <h2 class="section-title">
+                <span class="icon">📋</span>
+                Workout History
+            </h2>
+            <div class="table-container">
+                <table id="workoutsTable">
+                    <thead id="tableHeader"></thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h2 class="section-title">
+                <span class="icon">📈</span>
+                Progress Analytics
+            </h2>
+            <div class="chart-card">
+                <h3>Muscle Group Distribution</h3>
+                <p class="chart-description">Percentage breakdown of which muscles you train most</p>
+                <div class="chart-container">
+                    <canvas id="muscleChart"></canvas>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Workout</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="editForm" class="dynamic-form"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelEditBtn" class="btn btn-secondary">Cancel</button>
+                <button id="updateWorkoutBtn" class="btn btn-primary">Update Workout</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="pdfExportArea"></div>
+
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
