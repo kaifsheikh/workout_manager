@@ -537,6 +537,7 @@ body {
     left: 0;
     z-index: 2;
     scroll-behavior: smooth;
+    background: #16161f;  /* ⬅️ ye line add karo (surface2 jaisa dark) */
 }
 .image-slider::-webkit-scrollbar {
     display: none;
@@ -544,9 +545,10 @@ body {
 .slide-image {
     min-width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;  /* ⬅️ cover ki jagah contain */
     scroll-snap-align: start;
     transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: #16161f;  /* optional: extra safety */
 }
 .exercise-card:hover .slide-image {
     transform: scale(1.06);

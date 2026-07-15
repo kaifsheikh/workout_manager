@@ -76,43 +76,39 @@
 
         <section class="section-card">
             <h2 class="section-title">
-                <span class="icon">⚙️</span>
-                Column Management
-            </h2>
-            <div class="column-management">
-                <div class="column-box">
-                    <h4>Add New Column</h4>
-                    <div class="column-form-inline">
-                        <input type="text" id="newColumnName" placeholder="Column Name">
-                        <select id="newColumnType">
-                            <option value="text">Text</option>
-                            <option value="number">Number</option>
-                            <option value="boolean">Yes/No</option>
-                            <option value="date">Date</option>
-                        </select>
-                        <button id="addColumnBtn" class="btn btn-primary">Add</button>
-                    </div>
-                </div>
-                <div class="column-box">
-                    <h4>Delete Column</h4>
-                    <div class="column-form-inline">
-                        <select id="deleteColumnSelect">
-                            <option value="">Select Column</option>
-                        </select>
-                        <button id="deleteColumnBtn" class="btn btn-danger">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section-card">
-            <h2 class="section-title">
                 <span class="icon">💪</span>
                 Add New Workout
             </h2>
             <div id="dynamicForm" class="dynamic-form"></div>
             <button id="addWorkoutBtn" class="btn btn-primary">Save Workout</button>
         </section>
+
+        <!-- Inline Add Column (hidden by default) -->
+        <div id="inlineAddColumn"
+            style="display:none; margin-top:15px; padding:12px; background:var(--bg-card); border-radius:12px; border:1px solid var(--border-color);">
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
+                <div class="form-field" style="flex:1; min-width:150px;">
+                    <label for="inlineColName">Column Name</label>
+                    <input type="text" id="inlineColName" placeholder="e.g., Notes">
+                </div>
+                <div class="form-field" style="flex:1; min-width:130px;">
+                    <label for="inlineColType">Type</label>
+                    <select id="inlineColType">
+                        <option value="text">Text</option>
+                        <option value="number">Number</option>
+                        <option value="date">Date</option>
+                        <option value="boolean">Yes/No</option>
+                    </select>
+                </div>
+                <button id="saveInlineColumnBtn" class="btn btn-primary" style="margin-bottom:5px;">Save Column</button>
+                <button id="cancelInlineColumnBtn" class="btn btn-secondary" style="margin-bottom:5px;">Cancel</button>
+            </div>
+        </div>
+
+        <button type="button" id="showAddColumnBtn"
+            style="background:none; border:none; color:var(--accent-primary); cursor:pointer; font-size:0.9rem; margin-top:5px;">
+            ➕ Add New Column
+        </button>
 
         <section class="section-card">
             <h2 class="section-title">
@@ -132,6 +128,7 @@
                 <span class="icon">📈</span>
                 Progress Analytics
             </h2>
+            
             <div class="chart-card">
                 <h3>Muscle Group Distribution</h3>
                 <p class="chart-description">Percentage breakdown of which muscles you train most</p>

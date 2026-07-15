@@ -10,7 +10,8 @@
     "type": "Strength",
     "sets": 4,
     "reps": "8",
-    "restTime": "90 sec"
+    "restTime": "90 sec",
+    "compoundMovement": "Compound"
   },
   {
     "id": 2,
@@ -23,10 +24,39 @@
     "type": "Hypertrophy",
     "sets": 4,
     "reps": "12",
-    "restTime": "80 sec"
+    "restTime": "80 sec",
+    "compoundMovement": "Compound"
   },
   {
     "id": 3,
+    "images": [""],
+    "muscle": "Biceps",
+    "category": "Long Short Head",
+    "exerciseName": "Barbbell curls shoulder wide",
+    "alternative_id": [2],
+    "targetMuscle": "Short | Long Head",
+    "type": "Hypertrophy",
+    "sets": 4,
+    "reps": "12",
+    "restTime": "80 sec",
+    "compoundMovement": "isolation"
+  },
+  {
+    "id": 4,
+    "images": [""],
+    "muscle": "Biceps",
+    "category": "Short Head",
+    "exerciseName": "Barbbell curls Wide Grip",
+    "alternative_id": [2 , 3],
+    "targetMuscle": "Short Head",
+    "type": "Hypertrophy",
+    "sets": 4,
+    "reps": "12",
+    "restTime": "80 sec",
+    "compoundMovement": "isolation"
+  },
+  {
+    "id": 5,
     "images": ["images/arms/triceps.png" , "images/arms/triceps_2.png"],
     "muscle": "Triceps",
     "category": "Long Head",
@@ -36,6 +66,21 @@
     "type": "Hypertrophy",
     "sets": 4,
     "reps": "12",
-    "restTime": "80 sec"
+    "restTime": "80 sec",
+    "compoundMovement": "Compound"
+  },
+  {
+    "id": 6,
+    "images": [""],
+    "muscle": "Bicep",
+    "category": "Short Head",
+    "exerciseName": "Supination Dumbbell Curls",
+    "alternative_id": [4,2],
+    "targetMuscle": "Short Head",
+    "type": "Hypertrophy",
+    "sets": 4,
+    "reps": "12",
+    "restTime": "80 sec",
+    "compoundMovement": "isolation"
   }
 ]
