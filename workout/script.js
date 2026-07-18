@@ -1,4 +1,5 @@
 // ==================== GLOBAL STATE ====================
+const STORAGE_KEY = 'workout_exercises';   // <-- ADD THIS LINE
 let exercisesData = []; // will be loaded from workout.json
 let activeFilters = {
     muscle: null,
@@ -22,21 +23,38 @@ const categoryDropdownBtn = document.getElementById('categoryDropdownBtn');
 const typeDropdownBtn = document.getElementById('typeDropdownBtn');
 
 // ==================== DATA LOADING ====================
+
 async function loadExercises() {
+    // 1) Try localStorage first
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+        try {
+            exercisesData = JSON.parse(stored);
+            console.log(`✅ Loaded ${exercisesData.length} exercises from localStorage`);
+            init();
+            return;
+        } catch (e) {
+            console.warn('⚠️ Failed to parse localStorage data, falling back to workout.json', e);
+        }
+    }
+
+    // 2) Fallback: fetch from workout.json
     try {
         const response = await fetch('./workout.json');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         exercisesData = await response.json();
-        console.log(`✅ Loaded ${exercisesData.length} exercises from workout.json`);
+        // Save it to localStorage so it persists
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(exercisesData));
+        console.log(`✅ Loaded ${exercisesData.length} exercises from workout.json and cached to localStorage`);
         init();
     } catch (error) {
         console.error('❌ Failed to load workout.json:', error);
         cardsGrid.innerHTML = `
-                    <div class="no-results">
-                        <span class="icon">⚠️</span>
-                        <strong>Failed to load exercise data</strong><br>
-                        <span style="font-size:0.9rem;">Please ensure "workout.json" is in the same directory.</span>
-                    </div>`;
+            <div class="no-results">
+                <span class="icon">⚠️</span>
+                <strong>Failed to load exercise data</strong><br>
+                <span style="font-size:0.9rem;">Please ensure "workout.json" is in the same directory, or import a JSON file.</span>
+            </div>`;
     }
 }
 

@@ -1,7 +1,10 @@
 [
   {
     "id": 1,
-    "images": ["images/chest/flat.png","images/chest/chest.png"],
+    "images": [
+      "images/chest/flat.png",
+      "images/chest/chest.png"
+    ],
     "muscle": "Chest",
     "category": "Middle Chest",
     "exerciseName": "Flat Bench Barbell Press",
@@ -15,7 +18,9 @@
   },
   {
     "id": 2,
-    "images": ["images/arms/biceps.png"],
+    "images": [
+      "images/arms/biceps.png"
+    ],
     "muscle": "Biceps",
     "category": "Short Head",
     "exerciseName": "Dumbbell Bicep Curls",
@@ -29,11 +34,15 @@
   },
   {
     "id": 3,
-    "images": [""],
+    "images": [
+      ""
+    ],
     "muscle": "Biceps",
     "category": "Long Short Head",
     "exerciseName": "Barbbell curls shoulder wide",
-    "alternative_id": [2],
+    "alternative_id": [
+      2
+    ],
     "targetMuscle": "Short | Long Head",
     "type": "Hypertrophy",
     "sets": 4,
@@ -43,11 +52,16 @@
   },
   {
     "id": 4,
-    "images": [""],
+    "images": [
+      ""
+    ],
     "muscle": "Biceps",
     "category": "Short Head",
     "exerciseName": "Barbbell curls Wide Grip",
-    "alternative_id": [2 , 3],
+    "alternative_id": [
+      2,
+      3
+    ],
     "targetMuscle": "Short Head",
     "type": "Hypertrophy",
     "sets": 4,
@@ -57,7 +71,10 @@
   },
   {
     "id": 5,
-    "images": ["images/arms/triceps.png" , "images/arms/triceps_2.png"],
+    "images": [
+      "images/arms/triceps.png",
+      "images/arms/triceps_2.png"
+    ],
     "muscle": "Triceps",
     "category": "Long Head",
     "exerciseName": "Overhead Dumbbell Extension",
@@ -71,16 +88,37 @@
   },
   {
     "id": 6,
-    "images": [""],
-    "muscle": "Bicep",
+    "images": [
+      ""
+    ],
+    "muscle": "Biceps",
     "category": "Short Head",
     "exerciseName": "Supination Dumbbell Curls",
-    "alternative_id": [4,2],
+    "alternative_id": [
+      4,
+      2
+    ],
     "targetMuscle": "Short Head",
     "type": "Hypertrophy",
     "sets": 4,
     "reps": "12",
     "restTime": "80 sec",
+    "compoundMovement": "isolation"
+  },
+  {
+    "id": 7,
+    "images": [
+      "images/back/image.png"
+    ],
+    "muscle": "Back",
+    "category": "Lats",
+    "exerciseName": "Lat pulldown",
+    "alternative_id": [],
+    "targetMuscle": "Lats",
+    "type": "Hypertrophy",
+    "sets": 4,
+    "reps": "12",
+    "restTime": "90",
     "compoundMovement": "isolation"
   }
 ]

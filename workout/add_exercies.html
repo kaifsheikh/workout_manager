@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>➕ Add Exercises – Gym Library</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* extra styles for the add page */
+        .add-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1rem 0.8rem;
+            text-align: center;
+        }
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text3);
+            margin-top: 0.2rem;
+        }
+        .stat-card .muscle-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 2rem;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem 1.5rem;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .form-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text3);
+            letter-spacing: 0.3px;
+        }
+        .form-group input,
+        .form-group select {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.6rem 0.9rem;
+            color: var(--text1);
+            font-size: 0.95rem;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: var(--bg-btn);
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 30px;
+            color: var(--text1);
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid transparent;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #0b0e14;
+            border-color: var(--accent);
+        }
+        .btn-primary:hover {
+            background: #ff7a42;
+        }
+        .btn-outline {
+            background: transparent;
+            border-color: var(--border);
+        }
+        .btn-outline:hover {
+            background: var(--bg-card-hover);
+        }
+        .btn-success {
+            background: #2e7d5e;
+            border-color: #3a9b74;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #3a9b74;
+        }
+        .btn-danger {
+            background: #8b2f3f;
+            border-color: #b03a4e;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #b03a4e;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .import-export {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        .hidden-input {
+            display: none;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.7rem 2rem;
+            border-radius: 40px;
+            color: var(--text1);
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+            z-index: 999;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        @media (max-width: 700px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 450px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="add-container">
+        <!-- Back link -->
+        <a href="index.html" class="back-link">← Back to Library</a>
+
+        <h1 style="margin-bottom: 0.5rem;">➕ Add / Manage Exercises</h1>
+        <p style="color: var(--text3); margin-bottom: 1.5rem;">All changes are saved automatically to your browser's storage.</p>
+
+        <!-- STATISTICS -->
+        <div class="stats-grid" id="statsGrid">
+            <!-- will be filled by JS -->
+        </div>
+
+        <!-- IMPORT / EXPORT -->
+        <div class="import-export">
+            <button class="btn btn-success" onclick="exportJSON()">📥 Export JSON</button>
+            <button class="btn btn-outline" onclick="document.getElementById('fileInput').click()">📤 Import JSON</button>
+            <input type="file" id="fileInput" class="hidden-input" accept=".json" onchange="importJSON(event)" />
+            <button class="btn btn-danger" onclick="resetToDefault()">🔄 Reset to Default</button>
+        </div>
+
+        <!-- ADD FORM -->
+        <div class="form-card">
+            <h2 style="margin-bottom: 1rem;">➕ Add New Exercise</h2>
+            <form id="addForm" onsubmit="addExercise(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Exercise Name *</label>
+                        <input type="text" id="exName" placeholder="e.g. Incline Dumbbell Press" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Muscle *</label>
+                        <select id="exMuscle" required>
+                            <option value="Chest">Chest</option>
+                            <option value="Back">Back</option>
+                            <option value="Biceps">Biceps</option>
+                            <option value="Triceps">Triceps</option>
+                            <option value="Shoulders">Shoulders</option>
+                            <option value="Legs">Legs</option>
+                            <option value="Abs">Abs</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <input type="text" id="exCategory" placeholder="e.g. Upper Chest" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Target Muscle *</label>
+                        <input type="text" id="exTarget" placeholder="e.g. Upper Chest" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Type *</label>
+                        <select id="exType" required>
+                            <option value="Hypertrophy">Hypertrophy</option>
+                            <option value="Strength">Strength</option>
+                            <option value="Endurance">Endurance</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Sets *</label>
+                        <input type="number" id="exSets" placeholder="4" required min="1" />
+                    </div>
+                    <div class="form-group">
+                        <label>Reps *</label>
+                        <input type="text" id="exReps" placeholder="8–12" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Rest Time *</label>
+                        <input type="text" id="exRest" placeholder="60 sec" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Movement</label>
+                        <select id="exMovement">
+                            <option value="Compound">Compound</option>
+                            <option value="isolation">Isolation</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Image URLs (comma separated)</label>
+                        <input type="text" id="exImages" placeholder="images/chest/flat.png, images/chest/chest.png" />
+                        <span style="font-size:0.7rem;color:var(--text3);">Leave empty for placeholder</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Alternative IDs (comma separated)</label>
+                        <input type="text" id="exAlt" placeholder="2, 4" />
+                        <span style="font-size:0.7rem;color:var(--text3);">IDs of existing exercises</span>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">➕ Add Exercise</button>
+                        <button type="reset" class="btn btn-outline">🧹 Clear Fields</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- MESSAGE / TOAST -->
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <script>
+        // ================================================================
+        //  SHARED DATA (same as main script)
+        // ================================================================
+        const STORAGE_KEY = 'workout_exercises';
+        let exercisesData = [];
+
+        // ================================================================
+        //  LOAD DATA
+        // ================================================================
+        function loadData() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                try {
+                    exercisesData = JSON.parse(stored);
+                    console.log('✅ Loaded from localStorage:', exercisesData.length);
+                } catch (_) {
+                    exercisesData = [];
+                }
+            } else {
+                // fallback to default (you can also fetch workout.json)
+                exercisesData = [];
+            }
+            renderStats();
+        }
+
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(exercisesData));
+            renderStats();
+        }
+
+        // ================================================================
+        //  RENDER STATISTICS
+        // ================================================================
+        function renderStats() {
+            const grid = document.getElementById('statsGrid');
+            const total = exercisesData.length;
+
+            // Count per muscle
+            const muscleMap = {};
+            const muscles = ['Chest', 'Back', 'Biceps', 'Triceps', 'Shoulders', 'Legs', 'Abs'];
+            muscles.forEach(m => muscleMap[m] = 0);
+            exercisesData.forEach(ex => {
+                if (muscleMap.hasOwnProperty(ex.muscle)) muscleMap[ex.muscle]++;
+                else muscleMap[ex.muscle] = 1; // fallback
+            });
+
+            // Build HTML
+            let html = `
+                        <div class="stat-card">
+                            <div class="number">${total}</div>
+                            <div class="label">📦 Total Exercises</div>
+                        </div>
+                    `;
+
+            // Add each muscle stat
+            const colorMap = {
+                'Chest': '#e67e22',
+                'Back': '#3498db',
+                'Biceps': '#e74c3c',
+                'Triceps': '#9b59b6',
+                'Shoulders': '#1abc9c',
+                'Legs': '#f1c40f',
+                'Abs': '#2ecc71'
+            };
+
+            muscles.forEach(m => {
+                const count = muscleMap[m] || 0;
+                const dot = `<span class="muscle-dot" style="background:${colorMap[m]};"></span>`;
+                html += `
+                            <div class="stat-card">
+                                <div class="number">${count}</div>
+                                <div class="label">${dot} ${m}</div>
+                            </div>
+                        `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // ================================================================
+        //  ADD EXERCISE
+        // ================================================================
+        function getNextId() {
+            if (exercisesData.length === 0) return 1;
+            return Math.max(...exercisesData.map(e => e.id)) + 1;
+        }
+
+        function addExercise(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('exName').value.trim();
+            const muscle = document.getElementById('exMuscle').value;
+            const category = document.getElementById('exCategory').value.trim();
+            const target = document.getElementById('exTarget').value.trim();
+            const type = document.getElementById('exType').value;
+            const sets = parseInt(document.getElementById('exSets').value);
+            const reps = document.getElementById('exReps').value.trim();
+            const rest = document.getElementById('exRest').value.trim();
+            const movement = document.getElementById('exMovement').value;
+
+            const imagesRaw = document.getElementById('exImages').value.trim();
+            const images = imagesRaw ? imagesRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+            const altRaw = document.getElementById('exAlt').value.trim();
+            const altIds = altRaw ? altRaw.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n)) : [];
+
+            if (!name || !category || !target || !reps || !rest || isNaN(sets) || sets < 1) {
+                showToast('⚠️ Please fill all required fields correctly.', 2500);
+                return;
+            }
+
+            // Optional: check duplicate name
+            if (exercisesData.some(e => e.exerciseName.toLowerCase() === name.toLowerCase())) {
+                showToast('⚠️ An exercise with this name already exists.', 2500);
+                return;
+            }
+
+            const newExercise = {
+                id: getNextId(),
+                images: images,
+                muscle: muscle,
+                category: category,
+                exerciseName: name,
+                alternative_id: altIds,
+                targetMuscle: target,
+                type: type,
+                sets: sets,
+                reps: reps,
+                restTime: rest,
+                compoundMovement: movement
+            };
+
+            exercisesData.push(newExercise);
+            saveData();
+            document.getElementById('addForm').reset();
+            document.getElementById('exImages').value = '';
+            document.getElementById('exAlt').value = '';
+            showToast(`✅ "${name}" added successfully! (ID: ${newExercise.id})`, 2500);
+        }
+
+        // ================================================================
+        //  EXPORT / IMPORT
+        // ================================================================
+        function exportJSON() {
+            const blob = new Blob([JSON.stringify(exercisesData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'workout.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('📥 JSON exported successfully!', 2000);
+        }
+
+        function importJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (!Array.isArray(data)) throw new Error('Not an array');
+                    if (data.length > 0 && !data[0].id) throw new Error('Invalid format: missing "id"');
+                    exercisesData = data;
+                    saveData();
+                    showToast(`📤 Imported ${data.length} exercises from JSON!`, 2500);
+                } catch (err) {
+                    showToast(`❌ Import failed: ${err.message}`, 3000);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // ================================================================
+        //  RESET TO DEFAULT (fetch workout.json)
+        // ================================================================
+        async function resetToDefault() {
+            if (!confirm('⚠️ This will replace all current data with the default workout.json. Continue?')) return;
+            try {
+                const resp = await fetch('./workout.json');
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const data = await resp.json();
+                exercisesData = data;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                renderStats();
+                showToast(`🔄 Reset to default (${data.length} exercises)`, 2000);
+            } catch (err) {
+                showToast(`❌ Reset failed: ${err.message}`, 2500);
+            }
+        }
+
+        // ================================================================
+        //  TOAST HELPER
+        // ================================================================
+        function showToast(msg, duration = 2500) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            clearTimeout(el._timer);
+            el._timer = setTimeout(() => el.classList.remove('show'), duration);
+        }
+
+        // ================================================================
+        //  INIT
+        // ================================================================
+        loadData();
+    </script>
+
+</body>
+</html>
