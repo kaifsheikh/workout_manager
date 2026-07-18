@@ -1,6 +1,5 @@
 // ==================== GLOBAL STATE ====================
-const STORAGE_KEY = 'workout_exercises';   // <-- ADD THIS LINE
-let exercisesData = []; // will be loaded from workout.json
+let exercisesData = []; // only in-memory
 let activeFilters = {
     muscle: null,
     category: null,
@@ -22,43 +21,30 @@ const muscleDropdownBtn = document.getElementById('muscleDropdownBtn');
 const categoryDropdownBtn = document.getElementById('categoryDropdownBtn');
 const typeDropdownBtn = document.getElementById('typeDropdownBtn');
 
-// ==================== DATA LOADING ====================
-
+// ==================== DATA LOADING (only from JSON) ====================
 async function loadExercises() {
-    // 1) Try localStorage first
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-        try {
-            exercisesData = JSON.parse(stored);
-            console.log(`✅ Loaded ${exercisesData.length} exercises from localStorage`);
-            init();
-            return;
-        } catch (e) {
-            console.warn('⚠️ Failed to parse localStorage data, falling back to workout.json', e);
-        }
-    }
-
-    // 2) Fallback: fetch from workout.json
     try {
-        const response = await fetch('./workout.json');
+        const response = await fetch('./json/workout.json');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         exercisesData = await response.json();
-        // Save it to localStorage so it persists
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(exercisesData));
-        console.log(`✅ Loaded ${exercisesData.length} exercises from workout.json and cached to localStorage`);
+        console.log(`✅ Loaded ${exercisesData.length} exercises from workout.json`);
         init();
     } catch (error) {
         console.error('❌ Failed to load workout.json:', error);
+        exercisesData = []; // empty data
         cardsGrid.innerHTML = `
             <div class="no-results">
-                <span class="icon">⚠️</span>
-                <strong>Failed to load exercise data</strong><br>
-                <span style="font-size:0.9rem;">Please ensure "workout.json" is in the same directory, or import a JSON file.</span>
+                <span class="icon">📭</span>
+                <strong>No workout.json found</strong><br>
+                <span style="font-size:0.95rem;color:var(--text3);">
+                    Please place a valid workout.json in the same folder, or use the "Add Exercises" page to create one and export it.
+                </span>
             </div>`;
+        init(); // still renders empty
     }
 }
 
-// ==================== HELPERS ====================
+// ==================== HELPERS (same as before) ====================
 function getUniqueValues(key, dataArray = exercisesData) {
     return [...new Set(dataArray.map(ex => ex[key]))].sort();
 }
@@ -134,10 +120,8 @@ function updateAllDropdowns() {
     const availableCategories = getAvailableCategories();
     const availableTypes = getAvailableTypes();
 
-    // Validate selections against available options
     if (activeFilters.muscle && !availableMuscles.includes(activeFilters.muscle)) activeFilters.muscle = null;
-    if (activeFilters.category && !availableCategories.includes(activeFilters.category)) activeFilters.category =
-        null;
+    if (activeFilters.category && !availableCategories.includes(activeFilters.category)) activeFilters.category = null;
     if (activeFilters.type && !availableTypes.includes(activeFilters.type)) activeFilters.type = null;
 
     buildDropdown(muscleDropdownMenu, availableMuscles, 'muscle', activeFilters.muscle, muscleColorMap);
@@ -153,8 +137,7 @@ function onFilterChanged(changedFilter) {
     if (changedFilter === 'muscle') {
         const availableCategories = getAvailableCategories();
         const availableTypes = getAvailableTypes();
-        if (activeFilters.category && !availableCategories.includes(activeFilters.category)) activeFilters
-            .category = null;
+        if (activeFilters.category && !availableCategories.includes(activeFilters.category)) activeFilters.category = null;
         if (activeFilters.type && !availableTypes.includes(activeFilters.type)) activeFilters.type = null;
     }
     updateAllDropdowns();
@@ -181,8 +164,7 @@ function updateDropdownButtonStyles() {
 }
 
 function updateFilterIndicator() {
-    const hasFilters = activeFilters.muscle || activeFilters.category || activeFilters.type || activeFilters
-        .search;
+    const hasFilters = activeFilters.muscle || activeFilters.category || activeFilters.type || activeFilters.search;
     filterIndicator.classList.toggle('visible', hasFilters);
 }
 
@@ -192,8 +174,7 @@ function updateResultsTitle() {
     if (activeFilters.category) parts.push(`<strong>${activeFilters.category}</strong>`);
     if (activeFilters.type) parts.push(`<strong>${activeFilters.type}</strong>`);
     if (activeFilters.search) parts.push(`matching "<strong>${activeFilters.search}</strong>"`);
-    resultsTitle.innerHTML = parts.length === 0 ? 'Showing <strong>all exercises</strong>' : 'Filtered by: ' +
-        parts.join(' › ');
+    resultsTitle.innerHTML = parts.length === 0 ? 'Showing <strong>all exercises</strong>' : 'Filtered by: ' + parts.join(' › ');
 }
 
 // ==================== DROPDOWN TOGGLE ====================
@@ -361,11 +342,11 @@ function renderCards() {
 
     if (filtered.length === 0) {
         cardsGrid.innerHTML = `
-                    <div class="no-results">
-                        <span class="icon">😕</span>
-                        <strong>No exercises found</strong><br>
-                        <span style="font-size:0.95rem;color:var(--text3);">Try adjusting your filters or search query.</span>
-                    </div>`;
+            <div class="no-results">
+                <span class="icon">😕</span>
+                <strong>No exercises found</strong><br>
+                <span style="font-size:0.95rem;color:var(--text3);">Try adjusting your filters or search query.</span>
+            </div>`;
         return;
     }
 
@@ -374,7 +355,7 @@ function renderCards() {
         const accentClass = getAccentClass(ex.muscle);
         const typeClass = getTypeClass(ex.type);
         const emoji = getMuscleEmoji(ex.muscle);
-        const imageCount = ex.images.length;
+        const imageCount = ex.images ? ex.images.length : 0;
         const altIds = Array.isArray(ex.alternative_id) ? ex.alternative_id : (ex.alternative_id ? [ex.alternative_id] : []);
 
         const alternativesHTML = altIds.length > 0 ?
@@ -385,60 +366,44 @@ function renderCards() {
             }).filter(Boolean).join('') :
             '<span class="alt-link no-alt">None</span>';
 
-        const dotsHTML = ex.images ? ex.images.map((_, i) =>
+        const dotsHTML = (ex.images && ex.images.length > 1) ? ex.images.map((_, i) =>
             `<span class="dot-nav ${i === 0 ? 'active-dot' : ''}"></span>`).join('') : '';
 
         const imagesHTML = ex.images && ex.images.length > 0 ?
             `<div class="image-slider" onscroll="updateDots(event, this)">
-                        ${ex.images.map(img => `<img src="${img}" class="slide-image" alt="${ex.exerciseName}" onerror="this.style.display='none'; checkEmptySlider(this)">`).join('')}
-                    </div>` : '';
+                ${ex.images.map(img => `<img src="${img}" class="slide-image" alt="${ex.exerciseName}" onerror="this.style.display='none'; checkEmptySlider(this)">`).join('')}
+            </div>` : '';
 
         return `
-                <div class="exercise-card" style="animation-delay: ${index * 0.04}s;">
-                    <div class="card-accent-line ${accentClass}"></div>
-                    <div class="card-img-section">
-                        ${imagesHTML}
-                        <div class="img-placeholder" style="${ex.images && ex.images.length > 0 ? 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;' : ''}">
-                            <span class="muscle-emoji">${emoji}</span>
-                        </div>
-                        <span class="muscle-badge-top ${badgeClass}" style="z-index: 3;">${ex.muscle}</span>
-                        <span class="image-count-badge" style="z-index: 3;">📷 ${imageCount} image${imageCount > 1 ? 's' : ''}</span>
-                        <div class="card-dots-nav" style="z-index: 3;">${dotsHTML}</div>
+            <div class="exercise-card" style="animation-delay: ${index * 0.04}s;">
+                <div class="card-accent-line ${accentClass}"></div>
+                <div class="card-img-section">
+                    ${imagesHTML}
+                    <div class="img-placeholder" style="${ex.images && ex.images.length > 0 ? 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;' : ''}">
+                        <span class="muscle-emoji">${emoji}</span>
                     </div>
-                    <div class="card-body">
-                        <h3 class="exercise-name">${ex.exerciseName}</h3>
-                        <div class="meta-row">
-                            <span class="tag ${typeClass}">⚡ ${ex.type}</span>
-                            <span class="tag">📂 ${ex.category}</span>
-                            <span class="tag">🎯 ${ex.targetMuscle}</span>
-                        </div>
+                    <span class="muscle-badge-top ${badgeClass}" style="z-index: 3;">${ex.muscle}</span>
+                    ${imageCount > 0 ? `<span class="image-count-badge" style="z-index: 3;">📷 ${imageCount} image${imageCount > 1 ? 's' : ''}</span>` : ''}
+                    ${dotsHTML ? `<div class="card-dots-nav" style="z-index: 3;">${dotsHTML}</div>` : ''}
+                </div>
+                <div class="card-body">
+                    <h3 class="exercise-name">${ex.exerciseName}</h3>
+                    <div class="meta-row">
+                        <span class="tag ${typeClass}">⚡ ${ex.type}</span>
+                        <span class="tag">📂 ${ex.category}</span>
+                        <span class="tag">🎯 ${ex.targetMuscle}</span>
+                    </div>
                     <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-label">📊 Sets</span>
-                            <span class="info-value">${ex.sets}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">🔁 Reps</span>
-                            <span class="info-value">${ex.reps}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">⏱️ Rest Time</span>
-                            <span class="info-value">${ex.restTime}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">💪 Target</span>
-                            <span class="info-value">${ex.targetMuscle}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">🏋️ Movement</span>
-                            <span class="info-value">${ex.compoundMovement || '—'}</span>
-                        </div>
+                        <div class="info-item"><span class="info-label">📊 Sets</span><span class="info-value">${ex.sets}</span></div>
+                        <div class="info-item"><span class="info-label">🔁 Reps</span><span class="info-value">${ex.reps}</span></div>
+                        <div class="info-item"><span class="info-label">⏱️ Rest</span><span class="info-value">${ex.restTime}</span></div>
+                        <div class="info-item"><span class="info-label">🏋️ Movement</span><span class="info-value">${ex.compoundMovement || '—'}</span></div>
                     </div>
-                        <div class="alt-exercises">
-                            <strong>🔄 Alternatives:</strong> ${alternativesHTML}
-                        </div>
+                    <div class="alt-exercises">
+                        <strong>🔄 Alternatives:</strong> ${alternativesHTML}
                     </div>
-                </div>`;
+                </div>
+            </div>`;
     }).join('');
 }
 
@@ -466,5 +431,5 @@ function init() {
     updateResultsTitle();
 }
 
-// Start: load data from JSON then initialize
+// ==================== START ====================
 loadExercises();

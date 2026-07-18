@@ -120,5 +120,23 @@
     "reps": "12",
     "restTime": "90",
     "compoundMovement": "isolation"
+  },
+  {
+    "id": 8,
+    "images": [
+      "images/back/bend.png"
+    ],
+    "muscle": "Back",
+    "category": "Lats",
+    "exerciseName": "Bend over rows",
+    "alternative_id": [
+      7
+    ],
+    "targetMuscle": "Lats",
+    "type": "Strength",
+    "sets": 4,
+    "reps": "8",
+    "restTime": "2",
+    "compoundMovement": "Compound"
   }
 ]
